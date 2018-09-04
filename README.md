@@ -1,1 +1,1 @@
-# HonorsAlgorthimsAndDataStructures
+# HonorsAlgorithimsAndDataStructures
