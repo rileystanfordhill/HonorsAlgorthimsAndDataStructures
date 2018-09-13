@@ -1,0 +1,48 @@
+package labs;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Lab1 {
+
+	public static void main(String[] args) throws FileNotFoundException {
+
+		countOccurances("/Users/rileystanford-hill1/Documents/workspace/Honors Algorithms also Data Structures/src/labs/Input.txt"); 
+	} 
+
+	public static void countOccurances (String fileName) throws FileNotFoundException { 
+		File fromFile = new File(fileName); 
+		File toFile = new File("Result.txt"); 
+		Scanner in = new Scanner(fromFile); 
+		PrintWriter out = new PrintWriter(toFile); 
+		
+		// array to store the indexes
+		int [] occurances = new int[26]; 
+		
+		// uppercase ascii symbol: [65, 90]
+		// lowercase ascii symbol: [97, 122]
+		String line; 
+		while (in.hasNextLine()){ 
+			line = in.nextLine(); 
+			for (int i = 0; i < line.length(); i++) { 
+				char ch = line.charAt(i);
+				for (int j = 65; j < 65 + 26; j++) { 
+					if (ch == j || ch == j + 32) { 
+						occurances[j - 65] += 1; 
+					}
+				}
+			}
+		}
+		int counter = 65; 
+		for (int x: occurances) { 
+			out.println((char)counter + ": " + x);
+			counter++; 
+		} 
+		
+		in.close();
+		out.close();
+
+	}
+}
