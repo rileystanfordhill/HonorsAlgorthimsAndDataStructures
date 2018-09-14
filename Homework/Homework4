@@ -1,0 +1,27 @@
+package homework; 
+import java.io.*; 
+
+public class Homework4UpdateCount {
+
+	public static void main(String[] args) throws IOException {
+		
+		// old file to count the number of times that the program has executed
+		File countFile = new File("count.dat");
+		File temp = new File ("Temp"); 
+		DataOutputStream out = new DataOutputStream(new FileOutputStream(temp));
+		DataInputStream in; 
+		
+		// if file already exists, read number there and add one to it 
+		// use a temporary file and set it equal to the original one
+		if (countFile.exists()) { 
+			in = new DataInputStream(new FileInputStream(countFile));
+			out.writeInt(in.readInt() + 1);
+			temp.renameTo(countFile); 
+			in.close();
+		} else { // if file does not exist, create one with 1 written in it
+			out.writeInt(1);
+			temp.renameTo(countFile);
+		}
+		out.close();
+	}
+}
