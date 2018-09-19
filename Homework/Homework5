@@ -1,0 +1,76 @@
+package homework;
+
+import java.io.*; 
+import java.util.*; 
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class Homework5BinaryViewer extends Application {
+
+	@Override
+	public void start(Stage primaryStage) throws Exception{
+		
+		TextField tf = new TextField(); 
+        Label lb = new Label("Enter File Name"); 
+        TextArea txt = new TextArea(); 
+        
+        VBox root = new VBox(15);
+        root.setAlignment(Pos.TOP_CENTER); 
+        root.getChildren().addAll(lb, tf, txt); 
+     
+        Scene scene = new Scene(root, 575, 400);
+        
+        primaryStage.setTitle("Binary Viewer");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        tf.setOnAction(e -> { 
+        	String fileName = tf.getText();
+        	try {
+        		RandomAccessFile raf = new RandomAccessFile(fileName, "r");
+				raf.seek(0);
+				StringBuilder newText = new StringBuilder();  
+				int counter = 1; 
+				while(raf.getFilePointer() < raf.length()) { 
+					String binary = Integer.toBinaryString(raf.read()); 
+					if (binary.length() != 8)
+						for (int i = 0; i < 8 - binary.length(); i++) 
+							newText.append("0"); 
+					newText.append(binary + "  ");
+					
+					if (counter % 8 == 0) 
+						newText.append("\n"); 
+					counter ++; 
+				}
+				System.out.println(newText.toString());
+				txt.setText(newText.toString());
+				
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+        	
+        });
+       		
+	}
+	
+	public static void main(String[] args) {
+		launch(args); 
+
+	}
+
+}
