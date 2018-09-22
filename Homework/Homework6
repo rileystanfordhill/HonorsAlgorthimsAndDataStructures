@@ -1,0 +1,91 @@
+// PART 1
+static int evaluatePostfix (String eq) { 
+		Stack <Integer> stack = new Stack<>(); 
+		
+		for (int i = 0; i < eq.length(); i++) { 
+			char ch = eq.charAt(i); 
+			if (Character.isDigit(ch)) { 
+				stack.push(Integer.parseInt("" + ch)); 
+			} else { 
+				int topNum = stack.pop(); 
+				int bottNum = stack.pop(); 
+				if (ch == '+') stack.push(topNum + bottNum);
+				if (ch == '-') stack.push(bottNum - topNum); 
+				if (ch == '*') stack.push(topNum * bottNum); 
+				if (ch == '/') stack.push(bottNum / topNum); 
+			}
+		}
+		return stack.pop();  
+	}
+
+// PART 2
+class GenericStack <E> { 
+	private E[] e = (E[]) new Object[10]; 
+	private int last = -1; 
+
+	public GenericStack() { 
+		last = -1; 
+		//e = (E[])new Object[10]; 
+	}
+
+	public int getSize() { 
+		return last + 1;
+	}
+
+	public E peek () { 
+		if (!isEmpty()) { 
+			for (int i = getSize() - 1; i >= 0; i --) { 
+				if(e[i] != null) 
+				 return e[i]; 
+			}
+		} 
+		return null; 
+	}
+	
+	public E pop () { 
+		if (last < 0) return null; 
+		E remove = e[last]; 
+		e[last] = null; 
+		last--; 
+		return remove; 
+	}
+
+	public void push (E e1) { 
+		if (e.length > last + 1){ 
+			e[last + 1] = e1; 
+			last++; 
+		}
+		else { 
+			//E[] eNew = (E[]) new Object[e.length * 2];
+			System.out.println(e.length);
+			E[] eNew = Arrays.copyOf(e, e.length * 2); 
+			e = eNew; 
+			e[last + 1] = e1; 
+			last++;
+		}
+	}
+	
+	public boolean isEmpty() { 
+		for (int i = 0; i < getSize(); i ++) { 
+			if (e[i] != null)
+				return false; 
+		}
+		
+		return true; 
+	}
+	
+	@Override
+	public String toString() { 
+		StringBuilder result = new StringBuilder(); 
+		result.append("Stack: ["); 
+		for (E e1: e) { 
+			if (e1 != null)
+				result.append(e1 + ", "); 
+		}
+		result.deleteCharAt(result.length() - 2); 
+		result.deleteCharAt(result.length() - 1); 
+		result.append("]");
+		return result.toString(); 
+	}
+
+}
