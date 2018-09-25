@@ -1,0 +1,109 @@
+package homework;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Homework7BFS {
+
+	public static void main(String[] args) throws FileNotFoundException {
+
+		Scanner in = new Scanner(new File("Maze.txt")); 
+		int row = in.nextInt(); 
+		int col = in.nextInt(); 
+		in.nextLine(); 
+		int[][] maze = new int[row][col]; 
+
+		for (int i = 0; i < row; i ++) { 
+			String line = in.nextLine(); 
+			for (int j = 0; j < col; j++) { 
+				maze[i][j] = line.charAt(j) == 'x' ? -1: 0; 
+			}
+		}
+		in.close();
+		
+//		for (int [] arr: maze) { 
+//			for (int x: arr)  
+//				System.out.printf("%3d", x);
+//			System.out.println();
+//		}
+
+		int startI = 4, startJ = 1; 
+		int endI = 4, endJ = 3; 
+		Queue<Integer> q = new LinkedList<>(); 
+		q.offer(startI); 
+		q.offer(startJ); 
+		int[] dI = {-1, 0, 1, 0}; 
+		int[] dJ = {0, 1, 0, -1};
+		maze[startI][startJ] = 1; 
+		boolean found = false; 
+		while (!q.isEmpty() && !found) { 
+			int fromI = q.poll(); 
+			int fromJ = q.poll(); 
+			for (int k = 0; k < 4; k++) { 
+				int toI = fromI + dI[k]; 
+				int toJ = fromJ + dJ[k]; 
+				if (toI == endI && toJ == endJ)
+					found = true; 
+				if (toI >= 0 && toI < row && toJ >= 0 && toJ < col && maze[toI][toJ] == 0) { 
+					maze[toI][toJ] = maze[fromI][fromJ] + 1; 
+					q.offer(toI); 
+					q.offer(toJ); 
+				}
+
+			}
+		}
+		// print distance arry
+		System.out.println("\n----------------------------------\n");
+		for (int [] arr: maze) { 
+			for (int x: arr)  
+				System.out.printf("%3d", x);
+			System.out.println();
+		}
+		
+
+		Queue<Integer> temp = new LinkedList<>(); 
+		Stack<Integer> store = new Stack<>(); 
+		temp.offer(endI); 
+		temp.offer(endJ); 
+		
+		store.push(endI); 
+		store.push(endJ); 
+		boolean done = false; 
+		while (!temp.isEmpty() && !done) { 
+			int fI = temp.poll(); 
+			int fJ = temp.poll(); 
+			for (int k = 0; k < 4; k++) { 
+				int newI = fI + dI[k]; 
+				int newJ = fJ + dJ[k]; 
+				// checks to see if we are at the starting point 
+				if (newI == startI && newJ == startJ) 
+					done = true; 
+				if (newI >= 0 && newI < row && newJ >= 0 && newJ < col && maze[newI][newJ] == maze[fI][fJ] - 1) { 
+					temp.offer(newI); 
+					temp.offer(newJ); 
+					
+					store.push(newI); 
+					store.push(newJ); 
+					
+				}
+			}
+		}
+		
+		// printing 
+		StringBuilder st = new StringBuilder(); 
+		while (!store.isEmpty()) { 
+			int y = store.pop(); 
+			int x = store.pop(); 
+			st.append("(" + x + ", " + y + ") -> "); 
+		}
+		st.delete(st.length() - 3, st.length()); 
+		
+		
+		System.out.println(st);
+	}
+
+}
