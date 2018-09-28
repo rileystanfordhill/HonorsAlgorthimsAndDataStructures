@@ -32,7 +32,7 @@ public class Homework7BFS {
 //		}
 
 		int startI = 4, startJ = 1; 
-		int endI = 4, endJ = 3; 
+		int endI = 0, endJ = 9; 
 		Queue<Integer> q = new LinkedList<>(); 
 		q.offer(startI); 
 		q.offer(startJ); 
@@ -73,21 +73,24 @@ public class Homework7BFS {
 		store.push(endI); 
 		store.push(endJ); 
 		boolean done = false; 
-		while (!temp.isEmpty() && !done) { 
+		while (!done) { 
 			int fI = temp.poll(); 
 			int fJ = temp.poll(); 
-			for (int k = 0; k < 4; k++) { 
+			for (int k = 0; k < 4 && !done; k++) { 
 				int newI = fI + dI[k]; 
 				int newJ = fJ + dJ[k]; 
 				// checks to see if we are at the starting point 
-				if (newI == startI && newJ == startJ) 
+				if (newI == startI && newJ == startJ) { 
 					done = true; 
+					break; 
+				} 
 				if (newI >= 0 && newI < row && newJ >= 0 && newJ < col && maze[newI][newJ] == maze[fI][fJ] - 1) { 
 					temp.offer(newI); 
 					temp.offer(newJ); 
 					
 					store.push(newI); 
 					store.push(newJ); 
+					break; 
 					
 				}
 			}
@@ -104,6 +107,8 @@ public class Homework7BFS {
 		
 		
 		System.out.println(st);
+
+
 	}
 
 }
