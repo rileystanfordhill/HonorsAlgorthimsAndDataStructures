@@ -1,0 +1,90 @@
+package labs;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class Lab2 {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in); 
+
+		System.out.println("Enter starting point: ");
+		String start = in.next().toUpperCase(); 
+		System.out.println("Enter ending point:");
+		String end = in.next().toUpperCase(); 
+
+		// makes sure that the point entered is 2 characters long
+		if (start.length() < 2 || end.length() < 2) { 
+			System.out.println("That point entered is too short!");
+			main(args); 
+		}
+		
+		// converts from 'A-H''1-8' into array indices with the top left corner equal to (0,0)
+		int startI = getRow(start);
+		int startJ = getCol(start); 
+
+		int endI = getRow(end); 
+		int endJ = getCol(end); 
+
+		// if the ending point or the starting point is not a valid point on the board, it restarts the program!
+		if (startI >= 0 && startI < 8 && startJ >= 0 && startJ < 8 && endI >= 0 && endI < 8 && endJ >= 0 && endJ < 8) { 
+
+			// initialize an 8x8 board
+			int[][] board = new int[8][8]; 
+
+			Queue<Integer> q = new LinkedList<>(); 
+			q.offer(startI); 
+			q.offer(startJ); 
+			int dim = 8; 
+
+			// create the possible moves of the knight from each sqare
+			// ie: up 1 right 2, up 2 left 1, etc.
+			int[] di = {-2, -1, 1, 2, 2, 1, -1, -2}; 
+			int[] dj = {1, 2, 2, 1, -1, -2, -2, -1}; 
+
+			// set starting value equal to 1
+			board[startI][startJ] = 1; 
+
+			boolean found = false; 
+			while (!q.isEmpty() && !found) { 
+				int fromI = q.poll(); 
+				int fromJ = q.poll(); 
+				for (int k = 0; k < 8 && !found; k++) { 
+					// legally 'moves' the knight
+					int toI = fromI + di[k]; 
+					int toJ = fromJ + dj[k];
+					/*  if the knight 'moves' to the end point, found == true and this will be the last iteration of
+					 * the for loop and the while loop
+					 */
+					if (toI == endI && toJ == endJ) 
+						found = true;
+					// checks if the new 'move' is a possible 
+					if (toI >= 0 && toI < dim && toJ >= 0 && toJ < dim && board[toI][toJ] == 0) { 
+						board[toI][toJ] = board[fromI][fromJ] + 1; 
+						q.offer(toI); 
+						q.offer(toJ); 
+					}
+				}
+			}
+      
+			System.out.println("Number of move(s): " + (board[endI][endJ] - 1));
+		} else { 
+			System.out.println("One of your points entered is not a valid point! Please try again!");
+			main(args); 
+		}
+
+	} 
+	// gets the column index from the string of the point
+	static int getCol (String pt) { 
+		char ch = pt.charAt(0); 
+		return (ch - 65); 
+	}
+	// gets the row index from the string of the point
+	static int getRow (String pt) { 
+		return 8 - (pt.charAt(1) - 48); 
+
+	}
+
+}
