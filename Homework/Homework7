@@ -82,7 +82,6 @@ public class Homework7BFS {
 				// checks to see if we are at the starting point 
 				if (newI == startI && newJ == startJ) { 
 					done = true; 
-					break; 
 				} 
 				if (newI >= 0 && newI < row && newJ >= 0 && newJ < col && maze[newI][newJ] == maze[fI][fJ] - 1) { 
 					temp.offer(newI); 
