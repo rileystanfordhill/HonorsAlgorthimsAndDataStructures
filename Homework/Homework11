@@ -1,0 +1,79 @@
+package homework;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
+import javafx.stage.Stage;
+
+public class Homework11Fractal extends Application{
+	Pane root = new Pane(); 
+
+	@Override
+	public void start(Stage primaryStage) { 
+		
+		TextField tf = new TextField(); 
+		Label lab = new Label("Enter Order: ");
+		HBox hb = new HBox(20);
+		hb.getChildren().add(lab); 
+		hb.getChildren().add(tf); 
+		hb.setAlignment(Pos.CENTER);
+		hb.setPadding(new Insets (10, 10, 10, 125));
+		
+		tf.setOnAction(e -> { 
+			root.getChildren().clear();
+			root.getChildren().add(hb); 
+			int order = Integer.parseInt(tf.getText());
+        	horizontal(300, 300, 400, order);
+        });
+	
+		root.getChildren().addAll(hb);
+		Scene scene = new Scene(root, 600, 600); 
+		primaryStage.setTitle("Fractal");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+
+	// creates horizontal lines
+	public void horizontal (int x, int y, int size, int order) { 
+		if (order <= 0) return; 
+		
+		int startX = x - size / 2;
+		int startY = y;
+		int endX = x + size / 2; 
+		int endY = y; 
+		
+		Line l = new Line(startX, startY, endX, endY); 
+		root.getChildren().add(l); 
+		
+		vertical(startX, startY, size / 2, order - 1); 
+		vertical(endX, endY, size / 2, order - 1); 
+	}
+
+	// creates vertical lines
+	public void vertical (int x, int y, int size, int order) { 
+		if (order <= 0) return; 
+		
+		int startX = x; 
+		int startY = y - size / 2; 
+		int endX = x; 
+		int endY = y + size / 2; 
+		
+		Line l = new Line(startX, startY, endX, endY); 
+		root.getChildren().add(l); 
+		
+		horizontal(startX, startY, size / 2, order - 1); 
+		horizontal(endX, endY, size / 2, order - 1);
+	}
+
+	public static void main(String[] args) {
+		launch(args); 
+	}
+
+}
