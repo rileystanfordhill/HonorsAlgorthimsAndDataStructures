@@ -1,0 +1,48 @@
+
+public class NQueens {
+	static final int N = 8;
+	static boolean[][] board = new boolean[N][N];
+
+	public static void main(String[] args) {
+		backtrack(0);
+		printBoard();
+	}
+	
+	static boolean backtrack(int row) {
+		if (row == N) 
+			return true;
+		for (int col = 0; col < N; col++) {
+			if (isOK(row, col)) {
+				board[row][col] = true;
+				if (backtrack(row + 1))
+					return true;
+				board[row][col] = false;
+			}
+		}
+		return false;
+	}
+
+	static boolean isOK(int row, int col) {
+		for (int i = 0; i < row; i++) 
+			if (board[i][col])
+				return false;
+		int colcounter = 1;
+		for (int i = row - 1; i >= 0; i--) {
+			if (col - colcounter >= 0 && board[i][col - colcounter])
+				return false;
+			if (col + colcounter < board.length && board[i][col + colcounter])
+				return false;
+			colcounter++;
+		}
+		return true;
+	}
+
+	static void printBoard() {
+		for (boolean[] row : board) {
+			for (boolean col : row)
+				System.out.print(col ? " Q " : " _ ");
+			System.out.println();
+		}
+		System.out.println();
+	}
+}
