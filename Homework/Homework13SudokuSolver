@@ -1,0 +1,143 @@
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class Sudoku extends Application{
+ 
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		VBox root = new VBox(10);
+		root.setPadding(new Insets(15, 15, 15, 15));
+
+		GridPane pane = new GridPane();
+		GridPane[][]gp = new GridPane[3][3];
+		for (int i = 0; i < 3; i++) 
+			for (int j = 0; j < 3; j++) {
+				gp[i][j] = new GridPane();
+				gp[i][j].setPadding(new Insets(2, 2, 2, 2));
+				gp[i][j].setStyle("-fx-border-color: purple");
+				pane.add(gp[i][j], j, i);
+			}
+		TextField[][] tfCells = new TextField[9][9];
+		for (int i = 0; i < tfCells.length; i++) {
+			for (int j = 0; j < tfCells[i].length; j++) {
+				tfCells[i][j] = new TextField();
+				tfCells[i][j].setPrefColumnCount(1);
+				gp[i / 3][j / 3].add(tfCells[i][j], j % 3, i % 3);
+			}
+		}
+		int[][] cells = new int[9][9];
+
+		Button solveBtn = new Button();
+		solveBtn.setText("Solve!");
+
+		solveBtn.setOnAction(e -> {
+			for (int i = 0; i < tfCells.length; i++)
+				for (int j = 0; j < tfCells[i].length; j++) 
+					if (!tfCells[i][j].getText().isEmpty())
+						cells[i][j] = Integer.parseInt(tfCells[i][j].getText());            
+
+			solve(cells);
+
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 9; j++) {
+					if (cells[i][j] != 0)
+						tfCells[i][j].setText(cells[i][j] + "");
+					else tfCells[i][j].setText("");
+				}
+			}
+
+		});
+
+		Button resetBtn = new Button("Clear");
+		resetBtn.setOnAction(e -> {
+			for (int i = 0; i < tfCells.length; i++) {
+				for (int j = 0; j < tfCells[i].length; j++) {
+					tfCells[i][j].setText("");
+					cells[i][j] = 0;
+				}
+			}
+		});
+
+		StackPane sPane = new StackPane();
+		sPane.getChildren().add(solveBtn);
+		StackPane sPane2 = new StackPane();
+		sPane2.getChildren().add(resetBtn);
+		root.getChildren().addAll(pane, sPane, sPane2);
+
+		Scene scene = new Scene(root);
+		primaryStage.setResizable(false);
+		primaryStage.setTitle("Sudoku Solver");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+
+	void solve(int[][] grid) {
+		boolean [][] orig = getBooleanArray(grid); 
+		backtrack(orig, grid); 
+	}
+
+	static boolean backtrack(boolean[][] orig, int[][] grid) { 
+
+		for (int i = 0; i < 9; i++) { 
+			for (int j = 0; j < 9; j++) { 
+				if (grid[i][j] == 0) { 
+					for (int num = 1; num <= 9; num++) { 
+						if (isOk(grid, num, i, j) && !orig[i][j]) { 
+							grid[i][j] = num; 
+							if (backtrack(orig, grid))
+								return true; 
+							else 
+								grid[i][j] = 0; 
+						}
+					} 
+					return false;
+				} 
+			}
+		}
+		return true; 
+	}
+
+	static boolean isOk(int[][] grid, int val, int row, int col) { 
+		for (int i = 0; i < 9; i++) { 
+			if (grid[i][col] == val) 
+				return false; 
+			if (grid[row][i] == val)
+				return false; 
+		}
+		int startRow = row - row % 3; 
+		int startCol = col - col % 3; 
+		for (int i = startRow; i < startRow + 3; i++) { 
+			for (int j = startCol; j < startCol + 3; j++) { 
+				if (grid[i][j] == val)
+					return false; 
+			}
+		}
+
+		return true; 
+	}
+
+	// returns an array of booleans with true if it is an original number and false if it is not an original number
+	static boolean [][] getBooleanArray(int[][] grid) { 
+		boolean[][] orig = new boolean[grid.length][grid[0].length]; 
+		for (int i = 0; i < grid.length; i++) { 
+			for (int j = 0; j < grid[0].length; j++) { 
+				orig[i][j] = grid[i][j] != 0 ? true : false; 
+			}
+		}
+		return orig; 
+	}
+
+
+	public static void main(String[] args) {
+		launch(args); 
+	}
+} 
