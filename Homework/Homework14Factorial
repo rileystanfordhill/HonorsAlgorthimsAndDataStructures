@@ -1,0 +1,23 @@
+import java.util.HashMap;
+
+public class Factorial {
+
+	public static void main(String[] args) {
+	
+		HashMap<String, String> map = new HashMap<>(); 
+
+		int k = 1; 
+		for (int i = 64; i < 64 + 26; i ++) { 
+			String val = ""; 
+			for (int j = 0; j < k; j++)
+				val += (char)(i); 
+			k++; 
+			map.put((char)(i + 1) + "", val); 
+		}
+		String newAlphabet = "(A|"; 										
+		for (int i = 2; i < 25; i+=2) 
+			newAlphabet += "" + map.keySet().toArray()[i] + "|" + map.keySet().toArray()[i - 1] + "|"; 
+		newAlphabet += "Z)"; 																																																																																																																			
+	}
+
+}
