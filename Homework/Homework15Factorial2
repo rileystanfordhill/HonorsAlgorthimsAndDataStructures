@@ -1,0 +1,53 @@
+import java.util.HashMap;
+import java.util.Scanner; 
+
+public class Factorial {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in); 
+		int n = in.nextInt(); 
+
+		HashMap<String, String> map = new HashMap<>();
+
+		int k = 1; 
+		for (int i = 64; i < 64 + 26; i ++) { 
+			String val = ""; 
+			for (int j = 0; j < k; j++)
+				val += (char)(i); 
+			k++; 
+			map.put((char)(i + 1) + "", val); 
+		}
+
+		solve(n, map); 
+	}
+
+	static void solve (int n, HashMap<String, String> map) { 
+		HashMap<String, String> newMap = new HashMap<>(); 
+
+		int counter = n; 
+		for (String s: map.keySet()) { 
+			if (counter == 0) break; 
+			counter --; 
+			newMap.put(s, map.get(s)); 
+		}
+
+		String key = ""; 
+
+		for (int i = n - 1; i > 0; i--) { 
+
+			key = (String) newMap.keySet().toArray()[i]; 
+			int len = newMap.get(key).length(); 
+
+			String newKey = (String) newMap.keySet().toArray()[i - 1]; 
+			String val = newMap.get(newKey); 
+			String newVal = ""; 
+
+			for (int j = 0; j < len; j++)  
+				newVal += val; 
+
+			newMap.replace(newKey, newVal);
+			System.out.println(newMap);
+		}
+		System.out.println(newMap.get("A").length());
+	}
+}
