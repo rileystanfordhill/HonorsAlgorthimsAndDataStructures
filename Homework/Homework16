@@ -1,0 +1,87 @@
+package test;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+public class ZeroByte {
+
+	public static void main(String[] args) throws Exception {
+		File folder = new File("/Users/rileystanford-hill1/ZeroByte"); 
+		File[] listOfFiles = folder.listFiles(); 
+		String [] lines = new String[listOfFiles.length]; 
+		int k = 0; 
+		for (File f: listOfFiles) {
+			if (f.isFile()) {
+				lines[k] = f.getName(); 
+				k++; 
+			} 
+		} 
+		Arrays.sort(lines);
+		for (int i = 0; i < lines.length; i ++) {
+			lines[i] = lines[i].replace("DOT", "."); 
+			String result = ""; 
+			for (int j = 0; j < lines[i].length(); j++) { 
+				if (Character.isDigit(lines[i].charAt(j)))
+					continue; 
+				else 
+					result += lines[i].charAt(j);
+			}
+			lines[i] = result; 
+		}
+		
+		File file = new File("/Users/rileystanford-hill1/eclipse-workspace/Honors Algorithms and Data Structures Dillon Rengel/src/Test.java");
+		try (FileWriter fw = new FileWriter(file, true)) {  
+			BufferedWriter bw = new BufferedWriter(fw); 
+			PrintWriter pw = new PrintWriter(file); 
+			PrintWriter out = new PrintWriter(fw);
+			for (String line: lines) out.println(line); 
+			fw.close(); 
+			pw.close(); 
+			out.close(); 		
+		} catch (IOException e) {
+			System.out.println("failed");
+		}
+		
+
+
+		try {
+			runProcess("javac -cp src src/test/Test.java");
+			runProcess("java -cp src test/Test Test");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (file.delete()) 
+			System.out.println("deleted");
+		else 
+			System.out.println("failed");
+
+	} 
+
+	private static void printLines(String name, InputStream ins) throws Exception {
+		String line = null;
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(ins));
+		while ((line = in.readLine()) != null) {
+			System.out.println(name + " " + line);
+		}
+	}
+
+	private static void runProcess(String command) throws Exception {
+		Process pro = Runtime.getRuntime().exec(command);
+		printLines(command + " stdout:", pro.getInputStream());
+		printLines(command + " stderr:", pro.getErrorStream());
+		pro.waitFor();
+		System.out.println(command + " exitValue() " + pro.exitValue());
+	}
+}
