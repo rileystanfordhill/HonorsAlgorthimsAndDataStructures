@@ -1,0 +1,62 @@
+
+public class Adding {
+
+	public static void main(String[] args) {
+		System.out.println(add(2, 3));
+		System.out.println(subtract(9, 5));
+		System.out.println(multiply(4, 3));
+		System.out.println(divide(12, 0));
+		System.out.println(modulus(10, 0));
+	}
+	
+	static int add(int x, int y) { 
+		int carry = -1; 
+		while (carry != 0) { 
+			carry = x & y; 
+			x = x ^ y; 
+			y = carry << 1; 
+		}
+		return x; 
+	}
+	
+	static int subtract(int x, int y) {
+		return add(x, add(~y, 1)); 
+	}
+	
+	static int multiply(int x, int y) { 
+		int result = 0; 
+		for (int i = 0; i < y; i = add(i, 1)) { 
+			result = add(result, x); 
+		}
+		return result; 
+	}
+	
+	static int divide(int x, int y) { 
+		if (y == 0) {
+			System.out.println("cannot divide by 0");
+			return x; 
+		}
+		int r = x; 
+		int s = 0; 
+		while (r >= y) {
+			s = add(s, 1);  
+			r = subtract(r, y); 
+		}	
+		return s; 
+	}
+	
+	static int modulus (int x, int y) { 
+		if (y == 0) {
+			System.out.println("cannot divide by 0");
+			return x; 
+		}
+		int r = x; 
+		int s = 0; 
+		while (r >= y) { 
+			s = add(s, 1); 
+			r = subtract(r, y); 
+		}
+		return r; 
+	}
+
+}
