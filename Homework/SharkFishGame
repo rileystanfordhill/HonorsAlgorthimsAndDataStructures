@@ -1,0 +1,176 @@
+import java.util.ArrayList;
+import java.util.Scanner; 
+
+public class SkarkFishGame {
+
+	static char[][] board;
+	static final int FISH_NUMBER = 4;
+	static final int BOARD_SIZE = 5;
+	static Shark shark;
+	static ArrayList<Fish> fishes = new ArrayList<>();
+	static int moves = 0;
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		createBoard(BOARD_SIZE); 
+		printBoard(); 
+
+		while(fishes.size() > 0) { 
+			System.out.print("move n, s, e, or w?");
+			char ch = in.next().charAt(0); 
+			shark.move(ch);
+			for (int i = 0; i < fishes.size(); i++) { 
+				fishes.get(i).move();
+			}
+			printBoard();
+		}
+	}
+
+	static void createBoard(int n) { 
+		board = new char[n][n]; 
+		for (int i = 0; i < n; i ++) { 
+			for(int j = 0; j < n; j++) { 
+				board[i][j] = '~'; 
+			}
+		}
+		int sRow = (int) (Math.random() * n); 
+		int sCol = (int) (Math.random() * n); 
+		board[sRow][sCol] = 'X'; 
+		shark = new Shark(sRow, sCol);
+
+		int i = 0; 
+		int fRow; 
+		int fCol; 
+
+		for (int j = 0; j < FISH_NUMBER; j++) { 
+			fRow = (int) (Math.random() * n); 
+			fCol = (int) (Math.random() * n);
+
+			while (board[fRow][fCol] != '~') { 
+				fRow = (int) (Math.random() * n); 
+				fCol = (int) (Math.random() * n);
+			}
+			board[fRow][fCol] = 'O';
+			fishes.add(new Fish(fRow, fCol)); 
+		}
+	}
+
+	static void printBoard() { 
+		for (int i = 0; i < board.length; i++) { 
+			for (int j = 0; j < board[0].length; j++) { 
+				System.out.print(board[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	public static char[][] getBoard() {
+		return board;
+	}
+	public static void setBoard(char[][] board) {
+		SkarkFishGame.board = board;
+	}
+	public static ArrayList<Fish> getFishes() {
+		return fishes;
+	}
+	public static int getMoves() {
+		return moves;
+	}
+	public static void setMoves(int moves) {
+		SkarkFishGame.moves = moves;
+	}
+
+}
+
+
+class Shark { 
+	int row, col; 
+
+	Shark (int r, int c) { 
+		row = r; 
+		col = c; 
+	}
+
+	public void move(char ch) { 
+		ch = Character.toLowerCase(ch); 
+		int oldCol = col; 
+		int oldRow = row; 
+
+		if (ch == 'w' && col >= 1) { 
+			col --; 
+		} else if (ch == 'e' && col < SkarkFishGame.getBoard().length - 1) { 
+			col ++; 
+		} else if (ch == 'n' && row >= 1) { 
+			row --; 
+		} else if (ch == 's' && row < SkarkFishGame.getBoard().length - 1) { 
+			row ++; 
+		}
+
+		ArrayList<Fish> fishes = SkarkFishGame.getFishes();
+
+		for (int i = 0; i < fishes.size(); i++ ) { 
+			if (fishes.get(i).col == col && fishes.get(i).row == row) { 
+				fishes.remove(i);
+			}
+		}
+
+		char[][] board = SkarkFishGame.getBoard();
+		board[row][col] = 'X'; 
+		if (oldRow != row || oldCol != col)
+			board[oldRow][oldCol] = '~';
+		SkarkFishGame.setBoard(board);
+	}
+
+	public String toString() { 
+		return "row: " + row + ", col: " + col; 
+	}
+}
+
+class Fish { 
+	int row, col; 
+
+	Fish(int r, int c) { 
+		row = r; 
+		col = c; 
+	}
+
+	@Override
+	public String toString() { 
+		return "row: " + row + ", col: " + col; 
+	}
+
+	public int getRow() { 
+		return this.row; 
+	}
+	public int getCol() { 
+		return this.col; 
+	}
+
+	public void move(){ 
+		char[][] board = SkarkFishGame.getBoard(); 
+
+		int x = (int)(Math.random() * 2); 
+		int y = (int)(Math.random() * 2); 
+		if (x == 0) { 
+			if (y == 0) {
+				if (row - 1 >= 0 && board[row - 1][col] == '~')
+					board[row--][col] = '~'; 
+			} else { 
+				if (row < SkarkFishGame.getBoard().length - 1&& board[row + 1][col] == '~')
+					board[row++][col] = '~';  
+			}
+
+		} else {
+			if (y == 0) {
+				if (col - 1 >= 0 && board[row][col - 1] == '~') 
+					board[row][col--] = '~'; 
+			} else { 
+				if (col < SkarkFishGame.getBoard()[0].length - 1 && board[row][col + 1] == '~')
+					board[row][col++] = '~';			}
+
+		}
+		board[row][col] = 'O'; 
+		SkarkFishGame.setBoard(board);
+	}
+
+}
