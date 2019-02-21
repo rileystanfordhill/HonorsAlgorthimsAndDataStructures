@@ -18,9 +18,11 @@ int main() {
 	char result[ux - lx + 1]; 
 	int index = 0; 
 	for (int i = lx; i < ux; i++) { 
-		result[index] = arr[i]; 
+		result[index] ^= arr[i];
+		arr[i] ^= result[index]; 
+		result[index] ^= arr[i]; 
 		index++; 
-		printf("%c", arr[i]); 
+		printf("%c", result[index - 1]); 
 	}
 	
 	result[index + 1] = '\0'; 
