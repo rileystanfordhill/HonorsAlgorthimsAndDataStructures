@@ -1,0 +1,15 @@
+So first, I began to deobfuscate the code. I changed a lot of the variables names so that it would be easier to follow. 
+
+Then, I ran some of the functions on an online javascript compiler and discovered that the program only works if the ^86 is added 
+to the end of the string to add to the "qzxhgymazu" variable. 
+
+I replaced the function call with ^86, and then deleted (commented out) the function used to return that character from a character 
+array. So next, I copied the function used to parse to an integer, the function to return the big string, the function to decode the 
+string, and the call to the function into an online javascript compiler. I also added a print statement to print the variable I renamed as 
+"result." The printed output was the code (the other file in this folder called Decoded). 
+
+Some issues I ran into: 
+  - the escape character in the .match function had to be changed, so that took some googling to determine what it needed to be changed to. 
+  - determining that the ^ is the only character that does not crash the program
+  - figuring out how to use an online javascript compiler (lol) 
+ 
