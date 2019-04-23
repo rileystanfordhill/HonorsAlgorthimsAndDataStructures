@@ -18,7 +18,19 @@ public class BinarySearchTree {
 		root.insert(15);
 		root.insert(11);
 		root.insert(2);
-    
+		root.insert(14);
+		root.insert(16);
+
+
+		System.out.println(root.tree());
+		
+		System.out.println(root.search(13));
+
+		root.delete(root, 13);
+
+		System.out.println(root.tree());
+
+		System.out.println(root.search(13));
 	}
 
 }
@@ -51,17 +63,23 @@ class Node {
 	}
 
 	public boolean search(int value) { 
-		if (value == val)  
+		if (value == val) {
 			return true; 
-		else if (rightKid == null && leftKid == null)  
+		} else if (rightKid == null && leftKid == null) { 
 			return false;
-		else if (value > val) 
+		} else if (rightKid == null) {
+			return leftKid.search(value);
+		} else if (leftKid == null) {
+			return rightKid.search(value);
+		} else if (value > val) {
+			System.out.println(rightKid);
 			return rightKid.search(value); 
-		else  
+		} else {
 			return leftKid.search(value);  
+		}
 	}
 
-	public void deleteKey(Node root, int key){ 
+	public void delete(Node root, int key){ 
 		root = recDelete(root, key); 
 	} 
 
